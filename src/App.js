@@ -2,13 +2,7 @@ import { useState } from "react";
 import "./styles.css";
 
 export default function App() {
-  return (
-    <div className="flashcards">
-      {questions.map((questions) => (
-        <FlashCards cardObj={questions} />
-      ))}
-    </div>
-  );
+  return <FlashCards />;
 }
 
 const questions = [
@@ -45,15 +39,28 @@ const questions = [
   },
 ];
 
-function FlashCards({ cardObj }) {
-  const [isOpen, setIsOpen] = useState(true);
+function FlashCards() {
+  const [selectedId, setSelectedId] = useState(null);
+
+  function handleClick(id) {
+    setSelectedId(id !== selectedId ? id : null);
+  }
 
   return (
-    <div
-      className={`flashcards ${!isOpen ? "selected" : ""}`}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      {isOpen ? <p>{cardObj.question}</p> : <p>{cardObj.answer}</p>}
+    <div className="flashcards">
+      {questions.map((questions) => (
+        <div
+          key={questions.id}
+          onClick={() => handleClick(questions.id)}
+          className={questions.id === selectedId ? "selected" : ""}
+        >
+          <p>
+            {questions.id === selectedId
+              ? questions.answer
+              : questions.question}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
